@@ -100,15 +100,15 @@
 
 /* Custom button styles matching the design */
 .btn-primary {
-  @apply bg-primary text-primary-foreground hover:bg-primary/90 transition-colors;
+  @apply bg-primary text-primary-foreground hover:bg-blue-700 transition-colors;
 }
 
 .btn-secondary {
-  @apply bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-colors;
+  @apply bg-secondary text-secondary-foreground hover:bg-green-600 transition-colors;
 }
 
 .btn-accent {
-  @apply bg-accent text-accent-foreground hover:bg-accent/90 transition-colors;
+  @apply bg-accent text-accent-foreground hover:bg-orange-500 transition-colors;
 }
 
 /* Status indicator styles */

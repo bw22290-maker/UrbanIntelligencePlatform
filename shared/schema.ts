@@ -9,7 +9,6 @@ import {
   integer,
   decimal,
   boolean,
-  geometry,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -55,7 +54,7 @@ export const landUseZones = pgTable("land_use_zones", {
   id: serial("id").primaryKey(),
   name: varchar("name").notNull(),
   zoneType: varchar("zone_type").notNull(), // residential, commercial, industrial, green
-  geometry: geometry("geometry", { type: "polygon" }),
+  coordinates: jsonb("coordinates"), // Store polygon coordinates as JSON
   efficiency: decimal("efficiency", { precision: 5, scale: 2 }).default("0.00"),
   projectId: integer("project_id").references(() => projects.id),
   createdAt: timestamp("created_at").defaultNow(),
@@ -66,7 +65,8 @@ export const trafficNodes = pgTable("traffic_nodes", {
   id: serial("id").primaryKey(),
   name: varchar("name").notNull(),
   nodeType: varchar("node_type").notNull(), // intersection, signal, roundabout
-  geometry: geometry("geometry", { type: "point" }),
+  latitude: decimal("latitude", { precision: 10, scale: 8 }),
+  longitude: decimal("longitude", { precision: 11, scale: 8 }),
   flowRate: integer("flow_rate").default(0),
   efficiency: decimal("efficiency", { precision: 5, scale: 2 }).default("0.00"),
   projectId: integer("project_id").references(() => projects.id),
@@ -79,7 +79,8 @@ export const environmentalMetrics = pgTable("environmental_metrics", {
   metricType: varchar("metric_type").notNull(), // air_quality, green_coverage, noise_level
   value: decimal("value", { precision: 10, scale: 3 }).notNull(),
   unit: varchar("unit").notNull(),
-  location: geometry("location", { type: "point" }),
+  latitude: decimal("latitude", { precision: 10, scale: 8 }),
+  longitude: decimal("longitude", { precision: 11, scale: 8 }),
   projectId: integer("project_id").references(() => projects.id),
   recordedAt: timestamp("recorded_at").defaultNow(),
 });
