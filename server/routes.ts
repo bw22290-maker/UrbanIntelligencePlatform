@@ -242,6 +242,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Dashboard activities
+  app.post("/api/dashboard/activities", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const activity = await storage.logActivity({
+        userId,
+        action: req.body.action,
+        entityType: req.body.entityType,
+        description: req.body.description,
+        entityId: req.body.entityId,
+      });
+      res.json(activity);
+    } catch (error) {
+      console.error("Error creating activity:", error);
+      res.status(500).json({ message: "Failed to create activity" });
+    }
+  });
+
+  // Land use zones (generic endpoint for map)
+  app.get("/api/land-use/zones", isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = req.query.projectId;
+      if (!projectId) {
+        return res.json([]);
+      }
+      const zones = await storage.getLandUseZones(parseInt(projectId));
+      res.json(zones);
+    } catch (error) {
+      console.error("Error fetching land use zones:", error);
+      res.status(500).json({ message: "Failed to fetch land use zones" });
+    }
+  });
+
+  // Traffic nodes (generic endpoint for map)
+  app.get("/api/traffic/nodes", isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = req.query.projectId;
+      if (!projectId) {
+        return res.json([]);
+      }
+      const nodes = await storage.getTrafficNodes(parseInt(projectId));
+      res.json(nodes);
+    } catch (error) {
+      console.error("Error fetching traffic nodes:", error);
+      res.status(500).json({ message: "Failed to fetch traffic nodes" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
