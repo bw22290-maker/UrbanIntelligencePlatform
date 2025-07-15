@@ -33,7 +33,7 @@ export function CityMap() {
     svg.setAttribute("width", "100%");
     svg.setAttribute("height", "100%");
     svg.setAttribute("viewBox", "0 0 800 600");
-    svg.className = "w-full h-full";
+    svg.setAttribute("class", "w-full h-full");
 
     // Add city grid background
     const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
@@ -80,7 +80,7 @@ export function CityMap() {
       rect.setAttribute("stroke", district.color);
       rect.setAttribute("stroke-width", "2");
       rect.setAttribute("rx", "8");
-      rect.className = "cursor-pointer hover:fill-opacity-30 transition-all";
+      rect.setAttribute("class", "cursor-pointer hover:fill-opacity-30 transition-all");
       
       rect.addEventListener("click", () => {
         alert(`${district.name} District - View detailed analysis`);
@@ -115,7 +115,7 @@ export function CityMap() {
       path.setAttribute("stroke-width", "3");
       path.setAttribute("fill", "none");
       path.setAttribute("stroke-dasharray", "10,5");
-      path.className = "animate-pulse";
+      path.setAttribute("class", "animate-pulse");
       svg.appendChild(path);
     });
 
@@ -135,7 +135,7 @@ export function CityMap() {
       circle.setAttribute("fill", getMarkerColor(marker.type));
       circle.setAttribute("stroke", "#ffffff");
       circle.setAttribute("stroke-width", "2");
-      circle.className = "cursor-pointer hover:r-10 transition-all animate-pulse";
+      circle.setAttribute("class", "cursor-pointer transition-all animate-pulse");
       
       circle.addEventListener("click", () => {
         alert(`${marker.label} - Click to view details`);
