@@ -137,7 +137,7 @@ export function RecentActivity() {
                 <Clock className="w-6 h-6 text-gray-400" />
               </div>
               <p className="text-gray-500 font-medium">No recent activity</p>
-              <p className="text-sm text-gray-400 mt-1">Your activities will appear here</p>
+              <p className="text-sm text-gray-400 mt-1">Brian, your activities will appear here</p>
               <Button 
                 variant="outline" 
                 size="sm" 

@@ -7,7 +7,7 @@ This is a comprehensive urban planning and city management platform built with m
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
-User Profile: Brian Mutunga - Senior Urban Planner
+User Profile: BRIAN MUTUNGA - Senior Urban Planner
 Personalization: Professional interface with real-time functionality and advanced features.
 
 ## System Architecture
