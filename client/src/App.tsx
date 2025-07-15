@@ -25,31 +25,33 @@ function Router() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <p className="text-gray-600">Loading Urban Intelligence Platform...</p>
         </div>
       </div>
     );
   }
 
+  // If not authenticated, show landing page
+  if (!isAuthenticated) {
+    return (
+      <Switch>
+        <Route path="/" component={Landing} />
+        <Route component={Landing} />
+      </Switch>
+    );
+  }
+
+  // If authenticated, show dashboard and other pages
   return (
     <Switch>
-      {!isAuthenticated ? (
-        <>
-          <Route path="/" component={Landing} />
-          <Route component={Landing} />
-        </>
-      ) : (
-        <>
-          <Route path="/" component={Dashboard} />
-          <Route path="/land-use" component={LandUseOptimization} />
-          <Route path="/traffic" component={TrafficSimulator} />
-          <Route path="/environmental" component={EnvironmentalImpact} />
-          <Route path="/projects" component={ProjectManagement} />
-          <Route path="/reports" component={ReportsAnalytics} />
-          <Route path="/admin" component={Administration} />
-          <Route component={NotFound} />
-        </>
-      )}
+      <Route path="/" component={Dashboard} />
+      <Route path="/land-use" component={LandUseOptimization} />
+      <Route path="/traffic" component={TrafficSimulator} />
+      <Route path="/environmental" component={EnvironmentalImpact} />
+      <Route path="/projects" component={ProjectManagement} />
+      <Route path="/reports" component={ReportsAnalytics} />
+      <Route path="/admin" component={Administration} />
+      <Route component={NotFound} />
     </Switch>
   );
 }

@@ -68,12 +68,16 @@ export function Sidebar() {
         <div className="flex items-center space-x-3">
           <img
             src={user?.profileImageUrl || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&h=150"}
-            alt="Brian Mutunga"
+            alt={`${user?.firstName || 'User'} ${user?.lastName || 'Profile'}`}
             className="w-10 h-10 rounded-full object-cover border-2 border-blue-200"
           />
           <div className="flex-1">
-            <p className="text-sm font-medium text-gray-900">Brian Mutunga</p>
-            <p className="text-xs text-gray-500">Senior Urban Planner</p>
+            <p className="text-sm font-medium text-gray-900">
+              {user?.firstName && user?.lastName 
+                ? `${user.firstName} ${user.lastName}` 
+                : user?.email?.split('@')[0] || "Urban Planner"}
+            </p>
+            <p className="text-xs text-gray-500 capitalize">{user?.role || "Senior Urban Planner"}</p>
           </div>
           <div className="flex items-center space-x-1">
             <div className="w-2 h-2 bg-green-500 rounded-full"></div>
