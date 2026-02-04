@@ -1,20 +1,44 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { setupAuth, isAuthenticated } from "./replitAuth";
+import { setupAuth, isAuthenticated } from "./auth";
 import { z } from "zod";
 import { insertProjectSchema, insertLandUseZoneSchema, insertTrafficNodeSchema, insertEnvironmentalMetricSchema } from "@shared/schema";
+import healthRoutes from "./routes/health";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Health check routes (no auth required)
+  app.use('/', healthRoutes);
+
+  // Test endpoint
+  app.get('/api/test', (req, res) => {
+    res.json({ message: "Server is working!", timestamp: new Date().toISOString() });
+  });
+
   // Auth middleware
   await setupAuth(app);
 
   // Auth routes
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      console.log("Auth user request - req.user:", req.user);
+      
+      // For now, return the mock user directly in both dev and production
+      console.log("Returning mock user:", req.user);
+      return res.json(req.user);
+      
+      // Original code (commented out for now)
+      /*
+      if (process.env.NODE_ENV === 'development') {
+        console.log("Returning mock user:", req.user);
+        return res.json(req.user);
+      }
+      
+      const userId = req.user.claims?.sub || req.user.id;
       const user = await storage.getUser(userId);
+      console.log("Fetched user from storage:", user);
       res.json(user);
+      */
     } catch (error) {
       console.error("Error fetching user:", error);
       res.status(500).json({ message: "Failed to fetch user" });

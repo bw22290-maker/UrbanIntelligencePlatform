@@ -4,7 +4,8 @@ import { Building2, MapPin, Route, Leaf, BarChart3, Users } from "lucide-react";
 
 export default function Landing() {
   const handleLogin = () => {
-    window.location.href = "/api/login";
+    // For development, just reload to trigger auto-login
+    window.location.href = "/";
   };
 
   return (

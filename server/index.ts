@@ -1,10 +1,33 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { trustProxy, rateLimiter, apiRateLimiter, corsConfig, helmetConfig, validateRequest } from "./middleware/security";
+import { globalErrorHandler, notFound } from "./middleware/errorHandler";
+import { requestLogger } from "./middleware/logger";
+import cors from "cors";
+import helmet from "helmet";
 
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+
+// Trust proxy configuration
+trustProxy(app);
+
+// Security middleware
+app.use(helmet(helmetConfig));
+app.use(cors(corsConfig));
+
+// Rate limiting
+app.use(rateLimiter);
+
+// Request logging
+app.use(requestLogger);
+
+// Body parsing middleware
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: false, limit: '10mb' }));
+
+// Request validation
+app.use(validateRequest);
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -39,14 +62,13 @@ app.use((req, res, next) => {
 (async () => {
   const server = await registerRoutes(app);
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+  // Apply stricter rate limiting to API endpoints
+  app.use('/api', apiRateLimiter);
 
-    res.status(status).json({ message });
-    throw err;
-  });
+  // 404 handler for undefined routes (only for API routes)
+  app.all('/api*', notFound);
 
+  // Setup Vite BEFORE error handler so Vite errors aren't caught by global handler
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes
@@ -55,6 +77,9 @@ app.use((req, res, next) => {
   } else {
     serveStatic(app);
   }
+
+  // Global error handler (must be last, but after Vite setup)
+  app.use(globalErrorHandler);
 
   // ALWAYS serve the app on port 5000
   // this serves both the API and the client.
