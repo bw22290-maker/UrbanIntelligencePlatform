@@ -5,22 +5,23 @@
   "license": "MIT",
   "scripts": {
     "dev": "NODE_ENV=development tsx server/index.ts",
-    "build": "npm run build:client && npm run build:server",
+    "build": "npm install && npm run build:client && npm run build:server",
     "build:client": "vite build",
     "build:server": "esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist --minify",
     "start": "NODE_ENV=production node dist/index.js",
-    "preview": "npm run build && NODE_ENV=production node dist/index.js",
     "check": "tsc",
     "db:generate": "drizzle-kit generate",
-    "db:push": "drizzle-kit push",
     "db:migrate": "tsx server/scripts/migrate.ts",
     "db:seed": "tsx server/scripts/seed.ts",
-    "db:reset": "npm run db:migrate && npm run db:seed",
+    "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint . --ext ts,tsx --fix",
     "test": "echo \"No tests specified\" && exit 1",
     "docker:build": "docker build -t urban-intelligence-platform .",
+    "docker:run": "docker run -p 5000:5000 --env-file .env urban-intelligence-platform",
+    "preview": "npm run build && NODE_ENV=production node dist/index.js",
+    "db:reset": "npm run db:migrate && npm run db:seed"
     "docker:run": "docker run -p 5000:5000 --env-file .env urban-intelligence-platform"
   },
   "dependencies": {
@@ -123,6 +124,6 @@
     "vite": "^5.4.19"
   },
   "optionalDependencies": {
-    "bufferutil": "^4.0.8"
+    "bufferutil": "4.1.0"
   }
 }
