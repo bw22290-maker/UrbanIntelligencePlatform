@@ -21,8 +21,7 @@
     "docker:build": "docker build -t urban-intelligence-platform .",
     "docker:run": "docker run -p 5000:5000 --env-file .env urban-intelligence-platform",
     "preview": "npm run build && NODE_ENV=production node dist/index.js",
-    "db:reset": "npm run db:migrate && npm run db:seed"
-    "docker:run": "docker run -p 5000:5000 --env-file .env urban-intelligence-platform"
+    "db:reset": "npm run db:migrate && npm run db:seed",
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
