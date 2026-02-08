@@ -14,7 +14,8 @@ trustProxy(app);
 
 // Security middleware
 app.use(helmet(helmetConfig));
-app.use(cors(corsConfig));
+// Only apply CORS to API routes
+app.use('/api', cors(corsConfig));
 
 // Rate limiting
 app.use(rateLimiter);
