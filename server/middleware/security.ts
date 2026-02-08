@@ -29,15 +29,35 @@ const apiRateLimiter = rateLimit({
 // CORS configuration
 const corsConfig = {
   origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
-    const allowedOrigins = process.env.CORS_ORIGINS?.split(',') || ['http://localhost:3000', 'http://localhost:5000'];
-    
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
+    // In production, allow the Render domain
+    if (process.env.NODE_ENV === 'production') {
+      const allowedOrigins = process.env.CORS_ORIGINS?.split(',') || [
+        'https://urban-intelligence-platform.onrender.com',
+        'https://urban-intelligence-platform.onrender.com/'
+      ];
+      
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'), false);
+      }
     } else {
-      callback(new Error('Not allowed by CORS'), false);
+      // In development, allow localhost
+      const allowedOrigins = process.env.CORS_ORIGINS?.split(',') || [
+        'http://localhost:3000', 
+        'http://localhost:5000'
+      ];
+      
+      if (!origin) return callback(null, true);
+      
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'), false);
+      }
     }
   },
   credentials: true,
